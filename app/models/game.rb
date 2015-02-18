@@ -22,15 +22,21 @@ class Game < ActiveRecord::Base
   end
 
   def player
-    turn_count.odd? ? self.game_users.first : self.game_users.last
+    turn_counter.odd? ? 1 : 2
   end
 
   def valid_piece?(piece)
-
+    return piece if player == 1 && self.board[piece[0]][piece[1]].odd? ||
+                    player == 2 && self.board[piece[0]][piece[1]].even?
   end
 
   def move(move_arr)
-    piece = move_arr[0]
+    piece = valid_piece?(move_arr[0])
+    if piece
+      
+    else
+      return "Invalid Piece"
+    end
   end
 
   private
