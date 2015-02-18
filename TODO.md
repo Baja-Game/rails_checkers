@@ -3,3 +3,11 @@
 - [ ] games#find at PUT /games
 - [ ] games#list at GET /games
 - [ ] games#move at PUT /games/:id
+- [ ] add players to games#show
+- [ ] add finished column to Game 
+- [ ] Game Logic in Game model
+- [ ] Add in point system
+- [ ] users#leaders at GET /users
+- [ ] Add color choice column to GameUsers and include that info in game show
+- [ ] Add guest users
+- [ ] Add user edit page
