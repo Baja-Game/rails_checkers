@@ -11,7 +11,6 @@ class GamesController < ApplicationController
                    [2, 0, 2, 0, 2, 0, 2, 0]]
 
   def create
- #   binding.pry
     @user = User.find_by(authentication_token: params[:auth_token] )
     @game = Game.create(board: INITIAL_BOARD, turn_counter: 1)
     @game.game_users.create(user_id: @user.id)
