@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   validates :username, presence: true, length: { maximum: 50 }, uniqueness: true
+  has_many :game_users
+  has_many :games, through: :game_users
 
   before_save :ensure_authentication_token
 
