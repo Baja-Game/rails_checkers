@@ -5,18 +5,24 @@ class GamesController < ApplicationController
   def create
     @game = Game.create
     @game.users = [current_user]
-    render json: { game: @game }, status: :created
+    render json: show_results(@game), status: :created
   end
 
   def list
-    @games = current_user.games
+    @games = current_user.games.to_a
+    @games.map! { |g| show_results(g) }
     render json: { game: @games }, status: :ok
   end
 
   def show
     @game = Game.find(params[:id])
-    player1 = @game.users[0].username
-    @game.users[1] ? player2 = @game.users[1].username : player2 = nil
-    render json: { game: @game,  player1: player1, player2: player2 }, status: :ok
+    render json: show_results(@game), status: :ok
+  end
+
+  private
+  def show_results(g)
+    player1 = g.users[0].username
+    g.users[1] ? player2 = g.users[1].username : player2 = nil
+    { game: g,  player1: player1, player2: player2 }
   end
 end
