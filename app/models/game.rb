@@ -6,8 +6,19 @@ class Game < ActiveRecord::Base
 
   serialize :board
 
+  before_create :init_game
+
+  INITIAL_BOARD = [[0, 1, 0, 1, 0, 1, 0, 1],
+                   [1, 0, 1, 0, 1, 0, 1, 0],
+                   [0, 1, 0, 1, 0, 1, 0, 1],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0],
+                   [2, 0, 2, 0, 2, 0, 2, 0],
+                   [0, 2, 0, 2, 0, 2, 0, 2],
+                   [2, 0, 2, 0, 2, 0, 2, 0]]
+
   def as_json(opts={})
-    super(only: [:board, :turn_count])
+    super(only: [:board, :turn_counter])
   end
 
   def player
@@ -20,5 +31,11 @@ class Game < ActiveRecord::Base
 
   def move(move_arr)
     piece = move_arr[0]
+  end
+
+  private
+  def init_game
+    self.board = INITIAL_BOARD
+    self.turn_counter = 1
   end
 end
