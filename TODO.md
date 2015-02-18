@@ -1,6 +1,6 @@
 - [x] games#show at POST /games/:id
 - [x] games#create at POST /games
-- [ ] games#find at PUT /games
+- [ ] games#join at PUT /games
 - [ ] games#list at GET /games
 - [ ] games#move at PUT /games/:id
 - [ ] add players to games#show
