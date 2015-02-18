@@ -17,13 +17,14 @@ class GamesController < ApplicationController
   end
 
   def list
-#    @user = User.find_by(authentication_token: params[:auth_token])
     @games = current_user.games
     render json: { game: @games }, status: :ok
   end
 
   def show
     @game = Game.find(params[:id])
-    render json: { game: @game }, status: :ok
+    player1 = @game.users[0].username
+    @game.users[1] ? player2 = @game.users[1].username : player2 = nil
+    render json: { game: @game,  player1: player1, player2: player2 }, status: :ok
   end
 end
