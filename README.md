@@ -39,6 +39,13 @@ Finds an empty game and has the player join it as player2. If there is no empty 
 * auth_token: authentication_token
 * returns: game: {board, turn_counter}, player1: username, player2: username
 
+# Make Move
+
+### /games/:id PUT
+
+* auth_token: authentication_token
+* returns: Partially functional. Returns whether piece is valid or not.
+
 # TODO
 
 ## Easy Mode

@@ -12,6 +12,18 @@ class GamesController < ApplicationController
     render json: { game: @games }, status: :ok
   end
 
+  def move
+    #binding.pry
+    @game = Game.find(params[:id])
+    move = JSON.parse(params[:move])
+    piece = @game.valid_piece?(move.shift)
+    if piece
+      render json: { message: "Valid Move! Congrats"}, status: :ok
+    else
+      render json: { message: "Invalid Piece" }, status: :bad_request
+    end
+  end
+
   def show
     @game = Game.find(params[:id])
     render json: show_results(@game), status: :ok
