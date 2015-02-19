@@ -1,10 +1,10 @@
 - [x] games#show at POST /games/:id
 - [x] games#create at POST /games
-- [ ] games#join at PUT /games
-- [ ] games#list at GET /games
+- [x] games#join at PUT /games
+- [x] games#list at GET /games
 - [ ] games#move at PUT /games/:id
 - [ ] add players to games#show
-- [ ] add finished column to Game 
+- [x] add finished column to Game 
 - [ ] Game Logic in Game model
 - [ ] Add in point system
 - [ ] users#leaders at GET /users
