@@ -31,6 +31,14 @@ url: https://baja-checkers.herokuapp.com
 * returns: All games authenticated player is in
 * game: {board, turn_counter, finished}, player1: username, player2: username
 
+# Join Game
+Finds an empty game and has the player join it as player2. If there is no empty game, starts a new game with player as player1.
+
+### /games PUT
+
+* auth_token: authentication_token
+* returns: game: {board, turn_counter}, player1: username, player2: username
+
 # TODO
 
 ## Easy Mode
