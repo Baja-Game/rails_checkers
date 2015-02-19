@@ -13,9 +13,10 @@ class GamesController < ApplicationController
   end
 
   def move
+    #binding.pry
     @game = Game.find(params[:id])
-    move = params[:move]
-    piece = @game.valid_piece(move.shift)
+    move = JSON.parse(params[:move])
+    piece = @game.valid_piece?(move.shift)
     if piece
       render json: { message: "Valid Move! Congrats"}, status: :ok
     else
