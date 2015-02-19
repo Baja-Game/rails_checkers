@@ -18,7 +18,7 @@ class Game < ActiveRecord::Base
                    [2, 0, 2, 0, 2, 0, 2, 0]]
 
   def as_json(opts={})
-    super(only: [:board, :turn_counter])
+    super(only: [:board, :turn_counter, :finished])
   end
 
   def player
