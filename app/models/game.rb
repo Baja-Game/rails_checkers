@@ -39,14 +39,6 @@ class Game < ActiveRecord::Base
     end
   end
 
-  def one_player?
-    self.users.size == 1
-  end
-
-  def created_by?(user)
-    self.users[0].id == user.id
-  end
-
   private
   def init_game
     self.board = INITIAL_BOARD
