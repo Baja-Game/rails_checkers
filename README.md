@@ -18,10 +18,18 @@ url: https://baja-checkers.herokuapp.com
 
 # Show Game
 
-### /games/"id"
+### /games/"id" GET
 
-* auth_token: authentication_tokn
-* returns: game.board
+* auth_token: authentication_token
+* returns: game: {board, turn_counter}, player1: username, player2: username
+
+# List Games
+
+### /games GET
+
+* auth_token: authentication_token
+* returns: All games authenticated player is in
+* game: {board, turn_counter, finished}, player1: username, player2: username
 
 # TODO
 
