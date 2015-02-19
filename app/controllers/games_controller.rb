@@ -4,7 +4,8 @@ class GamesController < ApplicationController
 
   def create
     @game = Game.create
-    @game.users = [current_user]
+    
+    @game.users << current_user
     render json: show_results(@game), status: :created
   end
 
@@ -17,6 +18,17 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])
     render json: show_results(@game), status: :ok
+  end
+
+  def join
+    available_game = Game.all.find{|g| g.one_player? && !g.created_by?(current_user)}
+    if available_game
+      available_game.users << current_user
+      render json: show_results(available_game), status: :created
+    else
+      render json: { :error => "No Available game" }, status: :ok
+    end
+
   end
 
   private
