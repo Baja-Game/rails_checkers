@@ -3,10 +3,7 @@ class GamesController < ApplicationController
 
 
   def create
-    @game = Game.create
-    
-    @game.users << current_user
-    render json: show_results(@game), status: :created
+    render json: show_results(make_game), status: :created
   end
 
   def list
@@ -21,17 +18,24 @@ class GamesController < ApplicationController
   end
 
   def join
-    available_game = Game.all.find{|g| g.one_player? && !g.created_by?(current_user)}
+    available_game = Game.joins(:users).where(game_users_count: 1).
+                           where("users.id != #{current_user.id}").first
     if available_game
       available_game.users << current_user
       render json: show_results(available_game), status: :created
     else
-      render json: { :error => "No Available game" }, status: :ok
+    render json: show_results(make_game), status: :created
     end
 
   end
 
   private
+  def make_game
+    @game = Game.create
+    @game.users << current_user
+    @game
+  end
+
   def show_results(g)
     player1 = g.users[0].username
     g.users[1] ? player2 = g.users[1].username : player2 = nil
