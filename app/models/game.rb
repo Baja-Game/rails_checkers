@@ -43,6 +43,25 @@ class Game < ActiveRecord::Base
     end
   end
 
+  # finds
+  def jump_spot(piece, move)
+    [(piece[0] + move[0]) / 2, (piece[1] + move[0]) / 2]
+  end
+
+  def can_jump?(piece, move)
+    jspot = jump_spot(piece, move)
+    jpiece = self.board[jspot[0]][jspot[1]]
+    # An odd plus an even is always even, but an even plus an even or an
+    # odd plus an odd are always odd, so this returns true if pieces are
+    # from different players
+    true if (self.board[piece[0]][piece[1]] + jpiece).odd?
+  end
+
+  def end_turn
+    self.turn_counter += 1
+    self.save
+  end
+
   private
   def init_game
     self.board = INITIAL_BOARD
