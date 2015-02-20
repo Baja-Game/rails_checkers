@@ -11,7 +11,7 @@ url: https://baja-checkers.herokuapp.com
 
 # Login User
 
-### /users/log_in POST
+### /users/sign_in POST
 
 * user: {email: email, password: password}
 * returns: user: {email, username, authentication_token}
