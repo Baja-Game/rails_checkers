@@ -19,8 +19,7 @@ class GamesController < ApplicationController
     if piece
       if @game.valid_move?(piece).include?(moves[0])
         @game.process_move(piece, moves[0]) 
-        @game.end_turn
-        render json: { message: "Move Successful"}, status: :ok
+        
       else
         moves.each do |m|
           if @game.valid_move?(piece, jump = true).include?(m) && 
@@ -34,12 +33,17 @@ class GamesController < ApplicationController
             break
           end  
         end
-        @game.end_turn
-        render json: { message: "Jump Successful"}, status: :ok
+      end
+      @game.end_turn
+      if @game.finished
+        render json: { message: "Player #{@game.finished} Wins"}
+      else
+        render json: { message: "Move Successful"}, status: :ok
       end
     else
       render json: { message: "Invalid Piece" }, status: :bad_request
     end
+
   end
 
   def show
