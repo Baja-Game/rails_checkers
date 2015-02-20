@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150219032619) do
+ActiveRecord::Schema.define(version: 20150220215630) do
 
   create_table "game_users", force: :cascade do |t|
     t.integer  "game_id"
@@ -30,13 +30,13 @@ ActiveRecord::Schema.define(version: 20150219032619) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",     null: false
+    t.string   "encrypted_password",     default: "",     null: false
     t.string   "username"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,      null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20150219032619) do
     t.integer  "forfeits",               default: 0
     t.integer  "draws",                  default: 0
     t.integer  "experience",             default: 0
+    t.string   "theme",                  default: "none"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token"
