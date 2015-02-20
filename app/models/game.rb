@@ -21,22 +21,45 @@ class Game < ActiveRecord::Base
     super(only: [:id, :board, :turn_counter, :finished, :updated_at])
   end
 
-  def player
-    turn_counter.odd? ? 1 : 2
+  def player1
+    turn_counter.odd?
   end
 
   def valid_piece?(piece)
-    return piece if player == 1 && self.board[piece[0]][piece[1]].odd? ||
-                    player == 2 && self.board[piece[0]][piece[1]].even?
+    return piece if player1 && self.board[piece[0]][piece[1]].odd? ||
+                    !player1 && self.board[piece[0]][piece[1]].even?
   end
 
-  def move(move_arr)
-    piece = valid_piece?(move_arr[0])
-    if piece
-      
-    else
-      return "Invalid Piece"
+  def valid_move?(piece, jump=false)
+    jump ? j = 2 : j = 1
+    a, b = 0, 4
+    a = 2 if self.board[piece[0]][piece[1]] == 1
+    b = 2 if self.board[piece[0]][piece[1]] == 2
+    [[piece[0] - 1 * j, piece[1] - 1 * j],
+     [piece[0] - 1 * j, piece[1] + 1 * j],
+     [piece[0] + 1 * j, piece[1] - 1 * j],
+     [piece[0] + 1 * j, piece[1] + 1 * j]][a, b].select do |m|
+      m[0].between?(0, 7) && m[1].between?(0, 7) && self.board[m[0]][m[1]] == 0
     end
+  end
+
+  # finds
+  def jump_spot(piece, move)
+    [(piece[0] + move[0]) / 2, (piece[1] + move[0]) / 2]
+  end
+
+  def can_jump?(piece, move)
+    jspot = jump_spot(piece, move)
+    jpiece = self.board[jspot[0]][jspot[1]]
+    # An odd plus an even is always even, but an even plus an even or an
+    # odd plus an odd are always odd, so this returns true if pieces are
+    # from different players
+    true if (self.board[piece[0]][piece[1]] + jpiece).odd?
+  end
+
+  def end_turn
+    self.turn_counter += 1
+    self.save
   end
 
   private
