@@ -60,6 +60,8 @@ class Game < ActiveRecord::Base
   def process_move(piece, move)
     self.board[move[0]][move[1]] = self.board[piece[0]][piece[1]] 
     self.board[piece[0]][piece[1]] = 0
+    self.board[move[0]][move[1]] = 3 if move[0] == 7 && self.board[move[0]][move[1]] == 1
+    self.board[move[0]][move[1]] = 4 if move[0] == 0 && self.board[move[0]][move[1]] == 2
   end
 
   def end_turn
