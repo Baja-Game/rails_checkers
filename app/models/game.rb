@@ -57,6 +57,11 @@ class Game < ActiveRecord::Base
     true if (self.board[piece[0]][piece[1]] + jpiece).odd?
   end
 
+  def process_move(piece, move)
+    self.board[move[0]][move[1]] = self.board[piece[0]][piece[1]] 
+    self.board[piece[0]][piece[1]] = 0
+  end
+
   def end_turn
     self.turn_counter += 1
     self.save
