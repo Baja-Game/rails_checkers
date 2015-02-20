@@ -21,21 +21,25 @@ class Game < ActiveRecord::Base
     super(only: [:id, :board, :turn_counter, :finished, :updated_at])
   end
 
-  def player
-    turn_counter.odd? ? 1 : 2
+  def player1
+    turn_counter.odd?
   end
 
   def valid_piece?(piece)
-    return piece if player == 1 && self.board[piece[0]][piece[1]].odd? ||
-                    player == 2 && self.board[piece[0]][piece[1]].even?
+    return piece if player1 && self.board[piece[0]][piece[1]].odd? ||
+                    !player1 && self.board[piece[0]][piece[1]].even?
   end
 
-  def move(move_arr)
-    piece = valid_piece?(move_arr[0])
-    if piece
-      
-    else
-      return "Invalid Piece"
+  def valid_move?(piece, jump=false)
+    jump ? j = 2 : j = 1
+    a, b = 0, 4
+    a = 2 if self.board[piece[0]][piece[1]] == 1
+    b = 2 if self.board[piece[0]][piece[1]] == 2
+    [[piece[0] - 1 * j, piece[1] - 1 * j],
+     [piece[0] - 1 * j, piece[1] + 1 * j],
+     [piece[0] + 1 * j, piece[1] - 1 * j],
+     [piece[0] + 1 * j, piece[1] + 1 * j]][a, b].select do |m|
+      m[0].between?(0, 7) && m[1].between?(0, 7) && self.board[m[0]][m[1]] == 0
     end
   end
 
