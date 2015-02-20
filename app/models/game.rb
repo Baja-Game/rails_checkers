@@ -78,8 +78,19 @@ class Game < ActiveRecord::Base
   def end_turn
     self.turn_counter += 1
     unless self.check_moves || self.check_moves(true)
-      self.finished = 2 if player1
-      self.finished = 1 unless player1
+      if player1
+        self.finished = 2
+        self.users[0].losses += 1
+        self.users[0].experience += 2
+        self.users[1].wins += 1
+        self.users[1].experience += 10
+      else
+        self.finished = 1
+        self.users[0].wins += 1
+        self.users[0].experience += 10
+        self.users[1].losses += 1
+        self.users[1].experience += 2
+      end
     end
     self.save
   end

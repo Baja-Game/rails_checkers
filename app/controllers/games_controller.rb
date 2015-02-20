@@ -12,7 +12,6 @@ class GamesController < ApplicationController
   end
 
   def move
-    #binding.pry
     @game = Game.find(params[:id])
     moves = JSON.parse(params[:move])
     piece = @game.valid_piece?(moves.shift)
@@ -48,7 +47,6 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @game.board.map! {|r| r.join }
     render json: show_results(@game), status: :ok
   end
 

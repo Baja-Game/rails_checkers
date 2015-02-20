@@ -1,13 +1,7 @@
-- [x] games#show at POST /games/:id
-- [x] games#create at POST /games
-- [x] games#join at PUT /games
-- [x] games#list at GET /games
-- [ ] games#move at PUT /games/:id
-- [ ] add players to games#show
-- [x] add finished column to Game 
-- [ ] Game Logic in Game model
-- [ ] Add in point system
-- [ ] users#leaders at GET /users
-- [ ] Add color choice column to GameUsers and include that info in game show
+- [ ] users#index at GET /users for leaderboard
 - [ ] Add guest users
-- [ ] Add user edit page
+- [ ] users#edit at PUT /users to edit current_user
+- [ ] Add move log
+- [ ] Change join function to work based on level
+- [ ] Add forfeit capability to move
+- [ ] Add draw game logic
