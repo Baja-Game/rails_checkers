@@ -63,11 +63,28 @@ class Game < ActiveRecord::Base
     self.board[move[0]][move[1]] = 3 if move[0] == 7 && self.board[move[0]][move[1]] == 1
     self.board[move[0]][move[1]] = 4 if move[0] == 0 && self.board[move[0]][move[1]] == 2
   end
+  
+  def check_moves(jump=false)
+    (0..7).each_with_object([]) do |row, result|
+      (0..7).each do |col|
+        piece = [row, col]
+        next unless valid_piece?(piece)
+        return true if valid_move?(piece, jump).size > 0
+      end
+    end
+    false  
+  end
 
   def end_turn
     self.turn_counter += 1
+    unless self.check_moves || self.check_moves(true)
+      self.finished = 2 if player1
+      self.finished = 1 unless player1
+    end
     self.save
   end
+
+
 
   private
   def init_game
