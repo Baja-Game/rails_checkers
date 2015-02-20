@@ -45,7 +45,7 @@ class Game < ActiveRecord::Base
 
   # finds
   def jump_spot(piece, move)
-    [(piece[0] + move[0]) / 2, (piece[1] + move[0]) / 2]
+    [(piece[0] + move[0]) / 2, (piece[1] + move[1]) / 2]
   end
 
   def can_jump?(piece, move)
@@ -55,6 +55,13 @@ class Game < ActiveRecord::Base
     # odd plus an odd are always odd, so this returns true if pieces are
     # from different players
     true if (self.board[piece[0]][piece[1]] + jpiece).odd?
+  end
+
+  def process_move(piece, move)
+    self.board[move[0]][move[1]] = self.board[piece[0]][piece[1]] 
+    self.board[piece[0]][piece[1]] = 0
+    self.board[move[0]][move[1]] = 3 if move[0] == 7 && self.board[move[0]][move[1]] == 1
+    self.board[move[0]][move[1]] = 4 if move[0] == 0 && self.board[move[0]][move[1]] == 2
   end
 
   def end_turn

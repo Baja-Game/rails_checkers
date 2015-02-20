@@ -14,10 +14,29 @@ class GamesController < ApplicationController
   def move
     #binding.pry
     @game = Game.find(params[:id])
-    move = JSON.parse(params[:move])
-    piece = @game.valid_piece?(move.shift)
+    moves = JSON.parse(params[:move])
+    piece = @game.valid_piece?(moves.shift)
     if piece
-      render json: { message: "Valid Move! Congrats"}, status: :ok
+      if @game.valid_move?(piece).include?(moves[0])
+        @game.process_move(piece, moves[0]) 
+        @game.end_turn
+        render json: { message: "Move Successful"}, status: :ok
+      else
+        moves.each do |m|
+          if @game.valid_move?(piece, jump = true).include?(m) && 
+             @game.can_jump?(piece, m)
+            @game.process_move(piece, m)
+            x = @game.jump_spot(piece, m)
+            @game.board[x[0]][x[1]] = 0
+            piece = m
+          else
+            render json: { message: "Invalid Move" }, status: :bad_request
+            break
+          end  
+        end
+        @game.end_turn
+        render json: { message: "Jump Successful"}, status: :ok
+      end
     else
       render json: { message: "Invalid Piece" }, status: :bad_request
     end
@@ -25,6 +44,7 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
+    @game.board.map! {|r| r.join }
     render json: show_results(@game), status: :ok
   end
 
