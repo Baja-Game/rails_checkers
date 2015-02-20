@@ -8,7 +8,7 @@ class GamesController < ApplicationController
   def list
     @games = current_user.games.to_a
     @games.map! { |g| show_results(g) }
-    render json: { game: @games }, status: :ok
+    render json: @games, status: :ok
   end
 
   def move
