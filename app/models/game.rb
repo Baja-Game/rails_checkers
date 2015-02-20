@@ -45,7 +45,7 @@ class Game < ActiveRecord::Base
 
   # finds
   def jump_spot(piece, move)
-    [(piece[0] + move[0]) / 2, (piece[1] + move[0]) / 2]
+    [(piece[0] + move[0]) / 2, (piece[1] + move[1]) / 2]
   end
 
   def can_jump?(piece, move)

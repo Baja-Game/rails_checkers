@@ -21,15 +21,21 @@ class GamesController < ApplicationController
         @game.process_move(piece, moves[0]) 
         @game.end_turn
         render json: { message: "Move Successful"}, status: :ok
-      elsif @game.valid_move?(piece, jump = true).include?(moves[0]) && 
-            @game.can_jump?(piece, moves[0])
-        @game.process_move(piece, moves[0])
-        x = @game.jump_spot(piece, moves[0])
-        @game.board[x[0]][x[1]] = 0
+      else
+        moves.each do |m|
+          if @game.valid_move?(piece, jump = true).include?(m) && 
+             @game.can_jump?(piece, m)
+            @game.process_move(piece, m)
+            x = @game.jump_spot(piece, m)
+            @game.board[x[0]][x[1]] = 0
+            piece = m
+          else
+            render json: { message: "Invalid Move" }, status: :bad_request
+            break
+          end  
+        end
         @game.end_turn
         render json: { message: "Jump Successful"}, status: :ok
-      else
-        render json: { message: "Invalid Move" }, status: :bad_request
       end
     else
       render json: { message: "Invalid Piece" }, status: :bad_request
