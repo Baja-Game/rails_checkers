@@ -1,7 +1,6 @@
 class GamesController < ApplicationController
   before_action :authenticate_user_from_token!
 
-
   def create
     render json: show_results(make_game), status: :created
   end
@@ -49,8 +48,11 @@ class GamesController < ApplicationController
   end
 
   def show_results(g)
-    player1 = g.users[0].username
-    g.users[1] ? player2 = g.users[1].username : player2 = nil
+    x = g.users[0]
+    y = g.users[1]
+    player1 = { id: x.id, username: x.username }
+    y ? player2 = { id: y.id, username: y.username } : player2 = nil
     { game: g,  player1: player1, player2: player2 }
   end
+
 end
