@@ -3,10 +3,11 @@ Rails.application.routes.draw do
                                     sessions: "sessions" }
   get 'games/:id',        to: 'games#show', as: 'game'
   post 'games',           to: 'games#create'
-  get 'games', to: 'games#list', as: 'game_list'
-  put 'games/:id', to: 'games#move'
-  put 'games',  to: 'games#join'
-  get 'users/:id', to: 'users#show'
+  get 'games',            to: 'games#list', as: 'game_list'
+  put 'games/:id',        to: 'games#move'
+  put 'games',            to: 'games#join'
+  get 'users/:id',        to: 'users#show'
+  get 'users',            to: 'users#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
