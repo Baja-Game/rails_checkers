@@ -75,23 +75,26 @@ class Game < ActiveRecord::Base
     false  
   end
 
+  def winner
+    player1 ? (a, b = 0, 1) : (a, b = 1, 0)
+    player1 ? self.finished = 2 : self.finished = 1
+    self.users[0].losses += 1
+    self.users[0].experience += 2
+    self.users[1].wins += 1
+    self.users[1].experience += 10
+    self.users.each { |u| u.save }
+  end
+
+  def forfeit
+    player1 ? a = 0 : a = 1
+    self.users[a].forfeits += 1
+    self.users[a].experience -= 2
+    winner
+  end
+
   def end_turn
     self.turn_counter += 1
-    unless self.check_moves || self.check_moves(true)
-      if player1
-        self.finished = 2
-        self.users[0].losses += 1
-        self.users[0].experience += 2
-        self.users[1].wins += 1
-        self.users[1].experience += 10
-      else
-        self.finished = 1
-        self.users[0].wins += 1
-        self.users[0].experience += 10
-        self.users[1].losses += 1
-        self.users[1].experience += 2
-      end
-    end
+    winner unless self.check_moves || self.check_moves(true)
     self.save
   end
 
