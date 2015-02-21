@@ -66,7 +66,7 @@ url: https://baja-checkers.herokuapp.com
 ```
 {
     "game": {
-        "id": 18,
+        "id": 21,
         "board": [
             [
                 0,
@@ -92,7 +92,7 @@ url: https://baja-checkers.herokuapp.com
                 0,
                 1,
                 0,
-                1,
+                0,
                 0,
                 1,
                 0,
@@ -103,6 +103,16 @@ url: https://baja-checkers.herokuapp.com
                 0,
                 0,
                 0,
+                2,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                2,
+                0,
+                0,
                 0,
                 0,
                 0,
@@ -112,16 +122,6 @@ url: https://baja-checkers.herokuapp.com
                 0,
                 0,
                 0,
-                0,
-                0,
-                0,
-                0,
-                0
-            ],
-            [
-                2,
-                0,
-                2,
                 0,
                 2,
                 0,
@@ -149,15 +149,44 @@ url: https://baja-checkers.herokuapp.com
                 0
             ]
         ],
-        "turn_counter": 1,
-        "updated_at": "2015-02-20T15:30:55.815Z",
-        "finished": null
+        "turn_counter": 5,
+        "updated_at": "2015-02-21T21:28:21.541Z",
+        "finished": null,
+        "log": [
+            [
+                [
+                    3,
+                    4
+                ]
+            ],
+            [
+                [
+                    4,
+                    1
+                ]
+            ],
+            [
+                [
+                    4,
+                    3
+                ]
+            ],
+            [
+                [
+                    3,
+                    4
+                ]
+            ]
+        ]
     },
     "player1": {
-        "id": 8,
-        "username": "test1"
+        "id": 1,
+        "username": "alex"
     },
-    "player2": null
+    "player2": {
+        "id": 2,
+        "username": "andy"
+    }
 }
 ```
 

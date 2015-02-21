@@ -14,6 +14,7 @@ class GamesController < ApplicationController
   def move
     @game = Game.find(params[:id])
     params[:move] == "forfeit" ? moves = "forfeit" : moves = JSON.parse(params[:move])
+    @game.log << moves
     @game.player1 ? valid_user = @game.users[0] : valid_user = @game.users[1]
     if valid_user != current_user
       render json: { message: "Invalid Player" }, status: :bad_request

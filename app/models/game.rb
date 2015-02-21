@@ -5,6 +5,7 @@ class Game < ActiveRecord::Base
   validates_length_of :users, maximum: 2, message: "Only 2 players allowed."
 
   serialize :board
+  serialize :log
 
   before_create :init_game
 
@@ -18,7 +19,7 @@ class Game < ActiveRecord::Base
                    [2, 0, 2, 0, 2, 0, 2, 0]]
 
   def as_json(opts={})
-    super(only: [:id, :board, :turn_counter, :finished, :updated_at])
+    super(only: [:id, :board, :turn_counter, :finished, :log, :updated_at])
   end
 
   def player1
@@ -112,5 +113,6 @@ class Game < ActiveRecord::Base
   def init_game
     self.board = INITIAL_BOARD
     self.turn_counter = 1
+    self.log = []
   end
 end
