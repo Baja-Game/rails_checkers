@@ -13,37 +13,45 @@ class GamesController < ApplicationController
 
   def move
     @game = Game.find(params[:id])
-    moves = JSON.parse(params[:move])
-    piece = @game.valid_piece?(moves.shift)
-    if piece
-      if @game.valid_move?(piece).include?(moves[0])
-        @game.process_move(piece, moves[0]) 
-        
-      else
-        moves.each do |m|
-          if @game.valid_move?(piece, jump = true).include?(m) && 
-             @game.can_jump?(piece, m)
-            @game.process_move(piece, m)
-            x = @game.jump_spot(piece, m)
-            @game.board[x[0]][x[1]] = 0
-            @game.capture_counter = 40
-            piece = m
-          else
-            render json: { message: "Invalid Move" }, status: :bad_request
-            break
-          end  
-        end
-      end
+    params[:move] == "forfeit" ? moves = "forfeit" : moves = JSON.parse(params[:move])
+    @game.player1 ? valid_user = @game.users[0] : valid_player = @game.users[1]
+    if valid_user != current_user
+      render json: { message: "Invalid Player" }, status: :bad_request
+    elsif moves == "forfeit"
+      @game.forfeit
       @game.end_turn
-      if @game.finished
-        render json: { message: "Player #{@game.finished} Wins"}
-      else
-        render json: { message: "Move Successful"}, status: :ok
-      end
+      render json: { message: "Player #{@game.finished} Wins By Forfeit"}, status: :ok
     else
-      render json: { message: "Invalid Piece" }, status: :bad_request
+      piece = @game.valid_piece?(moves.shift)
+      if piece
+        if @game.valid_move?(piece).include?(moves[0])
+          @game.process_move(piece, moves[0]) 
+          
+        else
+          moves.each do |m|
+            if @game.valid_move?(piece, jump = true).include?(m) && 
+               @game.can_jump?(piece, m)
+              @game.process_move(piece, m)
+              x = @game.jump_spot(piece, m)
+              @game.board[x[0]][x[1]] = 0
+              @game.capture_counter = 40
+              piece = m
+            else
+              render json: { message: "Invalid Move" }, status: :bad_request
+              break
+            end  
+          end
+        end
+        @game.end_turn
+        if @game.finished
+          render json: { message: "Player #{@game.finished} Wins"}, status: :ok
+        else
+          render json: { message: "Move Successful"}, status: :ok
+        end
+      else
+        render json: { message: "Invalid Piece" }, status: :bad_request
+      end
     end
-
   end
 
   def show
