@@ -59,8 +59,11 @@ class GamesController < ApplicationController
   end
 
   def join
-    available_game = Game.joins(:users).where(game_users_count: 1).
-                           where("users.id != #{current_user.id}").first
+    level = ((current_user.experience / 10)**0.5).floor
+    available_game = Game.joins(:users).
+                          where(game_users_count: 1,
+                                level: (level-1)..(level+1)).
+                          where("users.id != #{current_user.id}").first
     if available_game
       available_game.users << current_user
       render json: show_results(available_game), status: :created
@@ -72,7 +75,7 @@ class GamesController < ApplicationController
 
   private
   def make_game
-    @game = Game.create
+    @game = Game.create(level: ((current_user.experience / 10)**0.5).floor)
     @game.users << current_user
     @game
   end
