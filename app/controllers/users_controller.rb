@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   
   def index
-    @users = User.order(experience: :desc).limit(5)
+    @users = User.order(experience: :desc).limit(20)
     render json: @users, status: :ok
   end
 
