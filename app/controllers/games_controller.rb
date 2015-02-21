@@ -26,6 +26,7 @@ class GamesController < ApplicationController
             @game.process_move(piece, m)
             x = @game.jump_spot(piece, m)
             @game.board[x[0]][x[1]] = 0
+            @game.capture_counter = 40
             piece = m
           else
             render json: { message: "Invalid Move" }, status: :bad_request
