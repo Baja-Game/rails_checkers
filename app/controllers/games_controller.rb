@@ -13,20 +13,25 @@ class GamesController < ApplicationController
 
   def move
     @game = Game.find(params[:id])
-    params[:move] == "forfeit" ? moves = "forfeit" : moves = JSON.parse(params[:move])
+    params[:move] == 'forfeit' ? moves = 'forfeit' : moves = JSON.parse(params[:move])
     @game.log << moves
     @game.player1 ? valid_user = @game.users[0] : valid_user = @game.users[1]
     if valid_user != current_user
-      render json: { message: "Invalid Player" }, status: :bad_request
-    elsif moves == "forfeit"
+      render json: { message: 'Invalid Player' }, status: :bad_request
+    elsif moves == 'forfeit'
       @game.forfeit
       @game.end_turn
       render json: { message: "Player #{@game.finished} Wins By Forfeit"}, status: :ok
     else
+      possible_jumps = @game.check_jumps
       piece = @game.valid_piece?(moves.shift)
       if piece
         if @game.valid_move?(piece).include?(moves[0])
-          @game.process_move(piece, moves[0]) 
+          if @game.forced_jumps? && @game.check_jumps.size > 0
+            result = 'jump'
+          else  
+            @game.process_move(piece, moves[0])
+          end
         else
           moves.each do |m|
             if @game.valid_move?(piece, jump = true).include?(m) && 
@@ -37,19 +42,27 @@ class GamesController < ApplicationController
               @game.capture_counter = 40
               piece = m
             else
-              render json: { message: "Invalid Move" }, status: :bad_request
-              break
+              result = 'invalid'
             end  
           end
+          result = 'jump' if @game.valid_move?(moves[-1], true).size > 0
         end
-        @game.end_turn
+        @game.end_turn unless result
         if @game.finished
           render json: { message: "Player #{@game.finished} Wins"}, status: :ok
         else
-          render json: { message: "Move Successful"}, status: :ok
+          if result 
+            if result == 'jump'       
+              render json: { message: 'Player Must Jump' }, status: :bad_request
+            else
+              render json: { message: 'Invalid Move' }, status: :bad_request
+            end
+          else
+            render json: { message: 'Move Successful' }, status: :ok
+          end
         end
       else
-        render json: { message: "Invalid Piece" }, status: :bad_request
+        render json: { message: 'Invalid Piece' }, status: :bad_request
       end
     end
   end
@@ -60,23 +73,27 @@ class GamesController < ApplicationController
   end
 
   def join
+    fjumps = params[:jumps] || true
+    fjumps = false if fjumps == 'false'
     level = ((current_user.experience / 10)**0.5).floor
     available_game = Game.joins(:users).
                           where(game_users_count: 1,
-                                level: (level-1)..(level+1)).
+                                level: (level-1)..(level+1),
+                                forced_jumps: fjumps).
                           where("users.id != #{current_user.id}").first
     if available_game
       available_game.users << current_user
       render json: show_results(available_game), status: :created
     else
-    render json: show_results(make_game), status: :created
+    render json: show_results(make_game(fjumps)), status: :created
     end
 
   end
 
   private
-  def make_game
-    @game = Game.create(level: ((current_user.experience / 10)**0.5).floor)
+  def make_game(fjumps = true)
+    @game = Game.create(level: ((current_user.experience / 10)**0.5).floor,
+                        forced_jumps: fjumps)
     @game.users << current_user
     @game
   end
