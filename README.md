@@ -202,7 +202,7 @@ Finds an empty game and has the player join it as player2. If there is no empty 
 
 ### /games PUT
 
-* auth_token: authentication_token
+* auth_token: authentication_token, jumps: false (optional, defaults to true)
 * returns: same as show games
 
 # Make Move

@@ -73,23 +73,27 @@ class GamesController < ApplicationController
   end
 
   def join
+    fjumps = params[:jumps] || true
+    fjumps = false if fjumps == 'false'
     level = ((current_user.experience / 10)**0.5).floor
     available_game = Game.joins(:users).
                           where(game_users_count: 1,
-                                level: (level-1)..(level+1)).
+                                level: (level-1)..(level+1),
+                                forced_jumps: fjumps).
                           where("users.id != #{current_user.id}").first
     if available_game
       available_game.users << current_user
       render json: show_results(available_game), status: :created
     else
-    render json: show_results(make_game), status: :created
+    render json: show_results(make_game(fjumps)), status: :created
     end
 
   end
 
   private
-  def make_game
-    @game = Game.create(level: ((current_user.experience / 10)**0.5).floor)
+  def make_game(fjumps = true)
+    @game = Game.create(level: ((current_user.experience / 10)**0.5).floor,
+                        forced_jumps: fjumps)
     @game.users << current_user
     @game
   end
