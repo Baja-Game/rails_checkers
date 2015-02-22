@@ -22,6 +22,26 @@ url: https://baja-checkers.herokuapp.com
 }
 ```
 
+# Edit User
+
+### /users PUT
+
+* user: {username: username, email: email, password: password}
+```
+{
+    "user": {
+        "email": "updated@email.com",
+        "username": "new-username",
+        "wins": 0,
+        "losses": 0,
+        "forfeits": 0,
+        "draws": 0,
+        "experience": 0
+    },
+    "auth_token": "FtH4ENxd9-H_TuNo89YP"
+}
+```
+
 # Sign In User
 
 ### /users/sign_in POST

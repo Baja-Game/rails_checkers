@@ -1,7 +1,3 @@
-- [ ] users#index at GET /users for leaderboard
+
 - [ ] Add guest users
-- [ ] users#edit at PUT /users to edit current_user
-- [ ] Add move log
-- [ ] Change join function to work based on level
-- [ ] Add forfeit capability to move
-- [ ] Add draw game logic
+
