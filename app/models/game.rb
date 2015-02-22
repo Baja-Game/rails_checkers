@@ -55,7 +55,7 @@ class Game < ActiveRecord::Base
     # An odd plus an even is always even, but an even plus an even or an
     # odd plus an odd are always odd, so this returns true if pieces are
     # from different players
-    true if (self.board[piece[0]][piece[1]] + jpiece).odd?
+    true if (self.board[piece[0]][piece[1]] + jpiece).odd? && jpiece != 0
   end
 
   def process_move(piece, move)
@@ -66,7 +66,7 @@ class Game < ActiveRecord::Base
   end
   
   def check_moves(jump=false)
-    (0..7).each_with_object([]) do |row, result|
+    (0..7).each_with_object do |row|
       (0..7).each do |col|
         piece = [row, col]
         next unless valid_piece?(piece)
@@ -74,6 +74,17 @@ class Game < ActiveRecord::Base
       end
     end
     false  
+  end
+  
+  def check_jumps
+    (0..7).each_with_object([]) do |row, result|
+      (0..7).each do |col|
+        piece = [row, col]
+        next unless valid_piece?(piece)
+        moves = valid_move?(piece, true)
+        moves.each { |m| result << [piece, m] if can_jump?(piece, m)}
+      end
+    end
   end
 
   def winner
