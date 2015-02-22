@@ -66,7 +66,7 @@ class Game < ActiveRecord::Base
   end
   
   def check_moves(jump=false)
-    (0..7).each_with_object do |row|
+    (0..7).each do |row|
       (0..7).each do |col|
         piece = [row, col]
         next unless valid_piece?(piece)

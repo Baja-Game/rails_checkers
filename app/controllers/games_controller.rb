@@ -23,10 +23,15 @@ class GamesController < ApplicationController
       @game.end_turn
       render json: { message: "Player #{@game.finished} Wins By Forfeit"}, status: :ok
     else
+      possible_jumps = @game.check_jumps
       piece = @game.valid_piece?(moves.shift)
       if piece
         if @game.valid_move?(piece).include?(moves[0])
-          @game.process_move(piece, moves[0]) 
+          if @game.forced_jumps? && @game.check_jumps.size > 0
+            result = "jump"
+          else  
+            @game.process_move(piece, moves[0])
+          end
         else
           moves.each do |m|
             if @game.valid_move?(piece, jump = true).include?(m) && 
@@ -41,12 +46,17 @@ class GamesController < ApplicationController
               break
             end  
           end
+          #check to force multiple jumps here
         end
-        @game.end_turn
+        @game.end_turn unless result
         if @game.finished
           render json: { message: "Player #{@game.finished} Wins"}, status: :ok
         else
-          render json: { message: "Move Successful"}, status: :ok
+          if result        
+            render json: { message: "Player Must Jump" }, status: :bad_request
+          else
+            render json: { message: "Move Successful"}, status: :ok
+          end
         end
       else
         render json: { message: "Invalid Piece" }, status: :bad_request
